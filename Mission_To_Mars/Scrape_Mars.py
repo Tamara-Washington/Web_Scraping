@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[35]:
-
-
 from bs4 import BeautifulSoup as bs
 import pandas as pd
 import requests
@@ -13,7 +10,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 from pprint import pprint
 
 
-# In[44]:
 def scrape():
 
 
@@ -21,12 +17,7 @@ def scrape():
     executable_path = {'executable_path': ChromeDriverManager().install()}
     browser = Browser('chrome', **executable_path, headless=False)
 
-
-    # In[6]:
-
-
     #NASA Mars News
-
     #Retrieve webpage and create an object
     url = 'https://mars.nasa.gov/news/'
     browser.visit(url)
@@ -35,71 +26,36 @@ def scrape():
     response = requests.get(url)
     soup = bs(response.text, 'lxml')
 
-
-    # In[7]:
-
-
     #Scrape site for news title and paragraph text
     news_heading = soup.find_all('div', class_="content_title")[1].text
     news_snip = soup.find("div", class_="rollover_description_inner").text
 
-    # In[8]:
-
-
     #Mars Facts
     url = 'https://space-facts.com/mars/'
-
-
-    # In[9]:
-
 
     #Retrieve webpage and create an object
     response = requests.get(url)
     soup = bs(response.text, 'lxml')
-
-
-    # In[10]:
-
 
     #Convert the HTML into a df
     info_df = pd.read_html(url)
     mars_df = info_df[0]
     mars_df
 
-
-    # In[11]:
-
-
     #Convert df to HTML table string
     htmltbl = mars_df.to_html()
     htmltbl.replace('\n','')
-
-
-    # In[45]:
-
 
     #Mars Hemispheres
     image_url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
     main_url = 'https://astrogeology.usgs.gov'
 
-
-    # In[46]:
-
-
     #Splinter Setup
     browser.visit(image_url)
-
-
-    # In[47]:
-
 
     #Create object and parse
     html= browser.html
     soup = bs(html,'lxml')
-
-
-    # In[48]:
-
 
     #Scrape the site for all mars info
     hemisphere = soup.find_all('div', class_="item")
